@@ -622,8 +622,14 @@ export const generateWAMessageContent = async (
 				buttonsMessage.contentText = message.caption
 			}
 
-			const type = Object.keys(m)[0].replace('Message', '').toUpperCase()
-			buttonsMessage.headerType = message.headerType ?? ButtonType[type as keyof typeof ButtonType]
+			const keys = Object.keys(m)
+			if (keys.length > 0 && keys[0]) {
+				const type = keys[0].replace('Message', '').toUpperCase()
+				const headerType = ButtonType[type as keyof typeof ButtonType]
+				buttonsMessage.headerType = message.headerType ?? (headerType ?? ButtonType.EMPTY)
+			} else {
+				buttonsMessage.headerType = message.headerType ?? ButtonType.EMPTY
+			}
 
 			Object.assign(buttonsMessage, m)
 		}
